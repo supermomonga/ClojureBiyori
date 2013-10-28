@@ -52,4 +52,4 @@ Clojure日和
 
 ライセンス
 ---------
-GPLv3
+![license](https://raw.github.com/esehara/ClojuerBiyori/master/gplv3-127x51.png "GPLv3")
