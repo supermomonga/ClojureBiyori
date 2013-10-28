@@ -156,18 +156,19 @@
 
 　ただし、気をつけなきゃいけないことがある。実は当たり前なんだけど、前の行で宣言されたものしか、次では使えない。だから、例えば
 
-```
+```clojure
 (defn and-string [prev next] (str prev " and " next))
 ```
 
 　という関数を作った時に、「あ、そうだ、この" and "という文字列に名前を付けよう！」と思ったとして
 
-```
+```clojure
 (defn and-string [prev next] (str prev center next))
 (def center " and ")
 ```
 
 　とかやっちゃうと、「centerなんてまだ定義されてないぞ！」と言われてしまう。例えばこういうの。
+
 ```
 Exception in thread "main" java.lang.Exception: Unable to resolve symbol: center in this context (NO_SOURCE_FILE:3)
 ```
@@ -212,13 +213,13 @@ Exception in thread "main" java.lang.Exception: Unable to resolve symbol: center
 
 　さて、この`'`とかいうやつはパワフルだ。なんだって「とりあえず、それ聞かないでくれる？」と言うことができるからだ。例えば
 
-```
+```clojure
 (2 + 1)
 ```
 
 　とか間違えてやると、エラーになる。当然で、"2"という数字は、関数としては存在しないからだ。とはいえ
 
-```
+```clojure
 '(2 + 1)
 ```
 
@@ -226,7 +227,7 @@ Exception in thread "main" java.lang.Exception: Unable to resolve symbol: center
 
 　しかし、これだけだと困ったことになる。確かに評価をそのままにしてくれるのはあり難いけれども、このままだとずーっとそのままだ。実際
 
-```
+```clojure
 (defn comming [] (println (str "Comming " 'my-guest))) 
 (def my-guest "esehara")
 (comming)
@@ -256,7 +257,7 @@ Exception in thread "main" java.lang.Exception: Unable to resolve symbol: center
 
 　さて、説明が幾分か後回しになってしまったけれども、Clojureは、数字、文字列、シンボル、それぞれ違うものだと考える。例えば、次の式を評価してみよう。
 
-```
+```clojure
 (+ 1 "1")
 ```
 
@@ -274,13 +275,13 @@ ClassCastException java.lang.String cannot be cast to java.lang.Number  clojure.
 
 　あとからしっかり教えるけれども、上のエラーを解決してみよう。そのために`Integer/parseInt`というのをつかってみよう。
 
-```
+```clojure
 (+ 1 (Integer/parseInt 1)) ;; => 2
 ```
 
 　これはつまり、「この文字列を数字にかえて」ということを伝えたのだ。なもんだから、数字になりそうもないやつはエラーを出すことになる
 
-```
+```clojure
 (+ 1 (Integer/parseInt "no Integer"))
 ```
 
