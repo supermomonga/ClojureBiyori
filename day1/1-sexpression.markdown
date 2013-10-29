@@ -292,3 +292,5 @@ NumberFormatException For input string: "no Integer"  java.lang.NumberFormatExce
 ```
 
 　「これ数字に見えるのか？ああん？」という感じのエラーをはいている。もうちょっとちゃんとしたいいかたをすると、「数字の形式ではないね」と述べているわけだ。
+
+(未完)
