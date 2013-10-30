@@ -98,7 +98,7 @@
 
 というわけで、下のように書き直すことができる。
 
-```
+```clojure
 (println "「貴方が落としたのは、金の斧ですか？銀の斧ですか？」")
 (println "1: 金の斧, 2: 銀の斧, 3: 普通の斧")
 (def your-answer (clojure.string/trim (read-line)))
@@ -149,7 +149,7 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 
 　だから、上の条件式も、下のように書ける。
 
-```
+```clojure
 (cond
   (= your-answer "3") (println "正直者には金の斧と銀の斧を与えましょう")
   (= your-answer "2") (println "傲慢なものには、斧を返しません")
@@ -159,7 +159,7 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 
 　最後にtrueを持ってきたのは、必ず最後で引っかかるようにするためだけれども、`true`という文字列をつかうと、何を意図しているかわからない、という問題がある。普通、プログラミング言語なら、こういった条件式で「それ以外」というのを説明するために`else`というのを使う。そして、Clojureにも、ちゃんとそういう条件式がついている。上の文章は、つまり
 
-```
+```clojure
 (cond
   (= your-answer "3") (println "正直者には金の斧と銀の斧を与えましょう")
   (= your-answer "2") (println "傲慢なものには、斧を返しません")
@@ -169,7 +169,7 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 
 　と書ける。しかし、こいつも順番には気をつけなければならない。
 
-```
+```clojure
 (cond
   :else (println "あなた、ちゃんと答えてください！")
   (= your-answer "3") (println "正直者には金の斧と銀の斧を与えましょう")
@@ -183,7 +183,7 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 
 　さて、もう一つ気になることがある。`"1"`も`"2"`も結果が一緒なんだから、これをまとめてしまうことは出来ないんだろうか。出来る。この場合、`and`と`or`を使う。`and`は「全てがtrueのときtrue」であり、「どれかがfalseがfalseのとき、false」であり、`or`は「どれかがtrueのときtrue」であり、「全てがfalseのとき、false」だ。どういうことかといえば、次の式を試してみるといい。
 
-```
+```clojure
 (and true true) ;; true
 (and true false) ;; false
 (or true false) ;; true
@@ -192,7 +192,7 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 
 　基本的には、この二つによって、「○と○が正しいとき」（あるいは、「×または×のどちらかが正しいとき」）を表現できる。もしこれらがわかりにくかったら、こう考えてもいいかもしれない。つまり、「andは一つでもfalseが見つかったら、全体がfalseであることが確定する」し、「orは一つでもtrueが見つかったら全体がtrueであることが確定する」と。なもんだから、
 
-```
+```clojure
 (and true true true true true false true true true) ;; false
 (or false false false false true false false false) ;; true
 ```
@@ -201,13 +201,13 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 
 　さて、アドベンチャーゲームの話に戻ろう。問題は、`"1"か"2"が入力されたとき`というのを表現したい、ということだった。
 
-```
+```clojure
 (or (= your-answer "2") (= your-answer "1"))
 ```
 
 　このように表現すればいい。
 
-```
+```clojure
 (println "「貴方が落としたのは、金の斧ですか？銀の斧ですか？」")
 (println "1: 金の斧, 2: 銀の斧, 3: 普通の斧")
 (def your-answer (clojure.string/trim (read-line)))
