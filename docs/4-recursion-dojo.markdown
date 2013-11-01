@@ -110,13 +110,13 @@ A -> B -> C
 
 　そこで、とりあえずダンジョンを、二つの入り口があるものとしてセットしよう。
 
-```
+```clojure
 (def dungeon '((C) (D E)))
 ```
 
 　問題は、この二つの入り口をどのようにして調べるかだ。そこで、`map`を使ってみよう。
 
-```
+```clojure
 (map tresure-hunt '((C) (D E))) ;; C E
 ```
 
@@ -125,7 +125,8 @@ A -> B -> C
 　そこで、リストの中身が全てリストである場合は、mapを発行し、全ての通路を調べるようにしてみてはどうだろうか
 
 　全てが何らかの値であるかどうかを調べる場合、`every?`を使う。これは`filter`と同じく、第二引数に対して真偽を調べるための関数を取る。
-```
+
+```clojure
 (defn tresure-hunt [dungeon]
   (cond
      (every? list? dungeon) (map tresure-hunt dungeon)
@@ -135,13 +136,13 @@ A -> B -> C
 
 　これで、ちゃんと上の簡略した分岐で値が取れるかを調べてみよう。
 
-```
+```clojure
 (tresure-hunt '((C) (D E))) ;; C E
 ```
 
 　OKだ。最後に、全体のマップで、ちゃんと全ての通路の行き止まりが出てくるかどうかを調べよう。
 
-```
+```clojure
 (def dungeon '(A B ((C) (D E))))
 (tresure-hunt dungeon) ;; ((C E))
 ```
