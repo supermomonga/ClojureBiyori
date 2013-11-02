@@ -265,7 +265,7 @@ A -> B -> C
 
 　さあ、この関数をテストしてみよう。
 
-```
+```clojure
 (binary-search 1 door-dungeon 0) ;; => 0
 (binary-search 100 door-dungeon 0) ;; => 9
 (binary-search 9 door-dungeon 0) ;; => 2
