@@ -148,3 +148,153 @@ A -> B -> C
 ```
 
 　成功だ。
+
+4. 扉の洞窟
+-----------
+
+　さて、再帰が使えるのは、何もこんな深く潜れる洞窟だけじゃない。例えば扉の洞窟みたいなものを考えてみよう。
+
+　扉の洞窟では、たくさんの扉がならんでいる。目の前には、宝が入った扉の「数」が書かれている。どの扉がどの数に対応しているかわからないが、少なくとも扉は数の小さいものから大きなものの順に並んでいることと、扉を開くと、その扉の数がわかることだけは知っている。注意しなければならないのは、宝は扉を開ける事にどんどん少なくなっていくということだ。だから、出来るだけ小さな試行回数によって、宝が入っている数の扉を開かなくてはならない。ちなみに、重複している数は存在しない。
+
+　ちょっとわかりづらいかもしれないが、これもリストだ。わかりやすいように、あらかじめ、数字のリストはわかっているものとして、テストデータを書いてみよう。ざっとこんな感じである。
+
+```
+(1 4 9 10 20 33 62 79 90 100)
+```
+
+　さて、これらの扉の数がもし「わからなかった」として、最短で宝を見つけ出すプログラムを書いてみよう。このとき、二分探索というものがつかえる。二分探索の概要は簡単だ。例えば、上のリストから「9」と書かれた扉を見つけたいとしよう。そこで、まず仮に真ん中で扉をわけてみるとする。
+
+```
+(1 4 9 10 20)
+(33 62 79 90 100)
+```
+
+　そこで、二番目の組である先頭の数字を開いてみる。すると、33だとわかる。既に数字は順番に並んでいる筈であり、33は一番小さい数字だ。なので、下の組には入っていない。入っているとするなら上の組だろう。従って、「9」は、先頭から数えて1から5番目の、何処かに並んでいることになる。
+
+　さて、同じようにまた半分にわけてみよう。
+
+```
+(1 4)
+(9 10 20)
+```
+
+　すると、下の一番下を取り出すと、`9`が取り出せた。この場合、3番目だから無事に終了だ。
+
+　このように、既に順序よく並んでいる番号を、半分ずつ取り出す検索方法のことを、二分探索とよぶ。この二分検索を再帰によって定義しよう。
+
+　まず最初に、リストの半分を取り出す処理を行おう。リストの要素数を調べるのは`count`だ。そして、あるリストから、要素分だけ先頭から取り出す関数は`take`だ。逆に、その要素数を先頭から消す関数は`drop`だ。そして、リストの先頭を取り出してくるものは`first`という関数だ。
+
+　さあ、これらを組み合わせて、まず渡されたリストの先頭が、ある数字より大きいか小さいかを調べてみよう。
+
+```clojure
+(defn first-is-big?
+  [checknum uselist] (< checknum (first uselist)))
+```
+
+　そして、あるリストの半分を取り出す関数も定義しよう。
+
+```clojure
+(defn count-half-list
+  [uselist] (/ (count uselist) 2))
+
+(defn drop-half-list
+  [uselist] (drop (count-half-list uselist) uselist)) 
+
+(defn take-half-list
+  [uselist] (take (count-half-list uselist) uselist))
+```
+
+　まずは再帰させずにテストしてみよう。
+
+```clojure
+(defn binary-search
+  [get-num uselist now-num]
+  (cond (= (first (drop-half-list uselist)) get-num) (+ now-num (count-half-list uselist))
+        (first-is-big? get-num (drop-half-list uselist)) "Yes, it is big!"
+        :else "No, it is small!"))
+```
+
+　そして、テストデータをセットし、チェックする。
+
+```clojure
+(def door-dungeon '(1 4 9 10 20 33 62 79 90 100))
+(binary-search 9 door-dungeon 0) ;; "Yes, it is big!"
+(binary-search 33 door-dungeon 0) ;; 5
+```
+
+　実は、既にあるリストから任意の番号のリストを取り出すための関数が用意されている。それが`nth`だ。ちゃんと`33`が5番目にあることを確認しよう。
+
+```clojure
+(nth door-dungeon 5) ;; => 5
+```
+
+　さて、今度は再帰させてみよう。
+
+```clojure
+(defn binary-search
+  [get-num uselist now-num]
+  (cond (= (first (drop-half-list uselist)) get-num) (+ now-num (count-half-list uselist))
+        (first-is-big? get-num (drop-half-list uselist))
+          (binary-search get-num (take-half-list uselist) now-num)
+        :else
+          (binary-search get-num (drop-half-list uselist) (+ now-num (count-half-list uselist)))))
+```
+
+　しかし、意図に反して、以下のような変な数字が返ってくるだろう。
+
+```clojure
+(binary-search 9 door-dungeon 0) :: 3/2
+```
+
+　これをfixするために、結果を返す最初のチェックに、`int`を付けよう。
+
+```clojure
+
+(defn count-half-list
+  [uselist] (int (/ (count uselist) 2)))
+
+(defn binary-search
+  [get-num uselist now-num]
+  (cond (= (first (drop-half-list uselist)) get-num)
+          (+ now-num (count-half-list uselist))
+        (first-is-big? get-num (drop-half-list uselist))
+          (binary-search get-num (take-half-list uselist) now-num)
+        :else
+          (binary-search get-num (drop-half-list uselist) (+ now-num (count-half-list uselist)))))
+```
+
+　さあ、この関数をテストしてみよう。
+
+```
+(binary-search 1 door-dungeon 0) ;; => 0
+(binary-search 100 door-dungeon 0) ;; => 9
+(binary-search 9 door-dungeon 0) ;; => 2
+```
+
+　上手く定義できているなら、ちゃんと場所が取り出せているだろう。
+
+　このように、再帰が素敵なのは、個々のパーツと、終了条件、それとそれに伴うデータの取扱いさえきちんとしていれば、自ずと自然な解決を導きだしてくれる点にある。もちろん、このような解決方法は、再帰を用いずとも出来る。
+
+　さて、この関数には、非常に厄介な欠点が存在する。そこで、存在しない要素を調べようとしてみよう。
+
+```
+(binary-search 15 door-dungeon 0)
+=> StackOverflowError   clojure.lang.LazySeq.seq (LazySeq.java:60)
+```
+
+　この`StackOverflowError`は、今回の場合は「再帰させすぎて、解決できない」というClojureの悲鳴だ。実は、`cond`の前に`println`を挿入しみればわかるのだが、リストを`(10)`にまで絞り込んだあと、延々と再帰し続けている！つまり、問題は、リストが一つまでに絞り込まれたとき、その要素がそれ自体でない場合は、その旨のメッセージを送らなければならない。
+```
+(defn binary-search
+  [get-num uselist now-num]
+  (cond (and (= (count uselist) 1)
+             (not (= (first uselist) get-num)))
+          (str "Not Found:" get-num)
+        (= (first (drop-half-list uselist)) get-num)
+          (+ now-num (count-half-list uselist))
+        (first-is-big? get-num (drop-half-list uselist))
+          (binary-search get-num (take-half-list uselist) now-num)
+        :else
+          (binary-search get-num (drop-half-list uselist) (+ now-num (count-half-list uselist)))))
+```
+
+　これで、ちゃんと存在しない要素を調べようとしたときには、その要素が存在しない旨をメッセージにすることが出来た。
