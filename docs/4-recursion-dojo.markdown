@@ -283,7 +283,8 @@ A -> B -> C
 ```
 
 　この`StackOverflowError`は、今回の場合は「再帰させすぎて、解決できない」というClojureの悲鳴だ。実は、`cond`の前に`println`を挿入しみればわかるのだが、リストを`(10)`にまで絞り込んだあと、延々と再帰し続けている！つまり、問題は、リストが一つまでに絞り込まれたとき、その要素がそれ自体でない場合は、その旨のメッセージを送らなければならない。
-```
+
+```clojure
 (defn binary-search
   [get-num uselist now-num]
   (cond (and (= (count uselist) 1)
