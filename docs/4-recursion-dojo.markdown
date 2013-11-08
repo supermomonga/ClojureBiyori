@@ -42,6 +42,8 @@ A -> B
 
 　普通、Lispだと`car`と`cdr`という記号を使うが、Clojureは人間に優しく`first`と`next`を使う。実は`rest`もあるのだが、今回は`rest`は使わない。
 
+> **リストの残りを取り出す二つの方法**
+>
 > `rest`と`next`の違いが気になる人は、`(next '(will-return-nil))`といと、
 > `(rest '(will-return-list))`を入力して比較してみるといいだろう。
 > `next`の場合は、`nil`が帰ってきて、`rest`は`()`が返ってくるはずだ。
