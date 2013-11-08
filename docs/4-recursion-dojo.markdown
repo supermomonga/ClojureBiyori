@@ -301,3 +301,85 @@ A -> B -> C
 ```
 
 　これで、ちゃんと存在しない要素を調べようとしたときには、その要素が存在しない旨をメッセージにすることが出来た。
+
+　この二分検索は、まだ十分に完成されているとはいいがたい（例えば、空リストが入ってきたときの挙動はどうだ？)。とはいえ、再帰なるものを理解するのにはこれで十分だろう。
+
+5. パンくずの洞窟
+----------------
+
+　さて、再帰について少しながらに知る事が出来た。確かに、結果を取り出すだけなら、上のような方法で十分である。しかし、僕たちの目的は、経路を調べ、そこから宝のある通路の場所を知りたいということが問題だった。というわけで、`旅人の洞窟`で使ったソースコードを、改めて再掲しよう。
+
+```clojure
+(defn tresure-hunt [dungeon]
+  (cond
+     (every? list? dungeon) (map tresure-hunt dungeon)
+     (nil? (next dungeon)) (first dungeon)
+     :else (tresure-hunt (next dungeon))))
+(def dungeon '(A B ((C) (D E))))
+(tresure-hunt dungeon) ;; ((C E))
+```
+
+　さて、ここから全ての通路のパターンを取り出してみよう。この場合は、以下の二つの経路が取り出せればいいのだから、気が楽だ。
+
+```
+A -> B -> C
+A -> B -> D -> E
+```
+
+　しかし、今、定義されている`tresure-hunt`は、いままでの通路を保存しておくような場所が無い。恐らく、過程として補完しておくべきところが必要だ。例えば、次のような感じで
+
+```clojure
+(defn tresure-hunt [walk dungeon]
+  (cond
+     (every? list? dungeon)
+       (map (fn [next] (tresure-hunt walk next)) dungeon)
+     (nil? (next dungeon)) (reverse (conj walk (first dungeon)))
+     :else (tresure-hunt (conj walk (first dungeon)) (next dungeon))))    
+```
+
+　さて、この関数をテストしてみよう。
+
+```
+(def dungeon '(A B ((C) (D E))))
+(tresure-hunt '() dungeon)
+```
+
+　そうすると、
+
+```
+(((A B C) (A B D E)))
+```
+
+　という結果が得られたはずだ。
+
+　一つ目の引数を追加したのには理由がある。それは、引数が現在の履歴を補完するための場所として機能させるためだ。しかし、初期値である空リストをいちいち指定するのは正直いって面倒臭いことこの上ないだろう。
+
+　もちろん、関数の定義をわけることは可能だ。例えば次のように。
+
+```clojure
+(defn tresure-hunt-start [dungeon]
+  (tresure-hunt '() dungeon))
+
+(defn tresure-hunt
+  [walk dungeon]
+  (cond
+     (every? list? dungeon)
+       (map (fn [next] (tresure-hunt walk next)) dungeon)
+     (nil? (next dungeon)) (reverse (conj walk (first dungeon)))
+     :else (tresure-hunt (conj walk (first dungeon)) (next dungeon))))    
+```
+
+　しかし、実際はもっとスマートな方法がある。引数によって、関数の振る舞いが変わるように制御が出来る。
+
+```clojure
+(defn tresure-hunt
+ ([dungeon] (tresure-hunt '() dungeon))
+ ([walk dungeon]
+  (cond
+     (every? list? dungeon)
+       (map (fn [next] (tresure-hunt walk next)) dungeon)
+     (nil? (next dungeon)) (reverse (conj walk (first dungeon)))
+     :else (tresure-hunt (conj walk (first dungeon)) (next dungeon)))))    
+```
+
+　二つの関数を用意するよりも、十分にスマートになった。
