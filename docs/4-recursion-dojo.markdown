@@ -383,3 +383,36 @@ A -> B -> D -> E
 ```
 
 　二つの関数を用意するよりも、十分にスマートになった。
+
+7. 複雑さと戦う冒険者のために(let)
+------------------------------------------
+
+　さて、ここまでで幾つかのダンジョンについて攻略をしてきた。しかし、前回の洞窟において、関数の中で同じような処理をしていることに気がつくだろう。例えば、`(conj walk (first dungeon))`という文句は幾つか出てくる。また、`(next dungeon)`も、同じように出てくる。
+
+　可読性ということを考えた時、このようなリストのまま投げ出していくと、そもそもそのデータが何を表しているのか不明になる。何らかのシンボルに、値を結びつけるのは、人間にとってもっと読みやすいものにするためである。
+
+　まず最初に、`(conj walk (first dungeon))`は、`今まで歩いてきた洞窟の履歴`であるという事が出来るだろう。`(next dungeon)`は文字通り、`残りの通路の情報`と捉える事が出来る。
+
+　そこで、あるリストの中だけで通用するようなシンボルを臨時に定義できるといいだろう。そういう場合、`let`を使うことができる。
+
+```clojure
+(defn tresure-hunt
+ ([dungeon] (tresure-hunt '() dungeon))
+ ([walk dungeon]
+  (let [history (conj walk (first dungeon))
+        next-dungeon (next dungeon)]
+    (cond
+       (every? list? dungeon)
+         (map (fn [next] (tresure-hunt walk next)) dungeon)
+       (nil? next-dungeon) (reverse history)
+       :else (tresure-hunt history next-dungeon)))))
+```
+
+　この`let`に関しては、下のような形を取る。
+
+```
+(let [何らかのシンボル 何らかの値]
+  処理の内容)
+```
+
+　さて、`let`の中の`[]`においては、やはりペアでないといけない。実際に、奇数で定義しようとするとエラーが出る。
