@@ -52,6 +52,8 @@ Clojure日和
 5. 名付けるほどでもないつまらない奴(匿名関数)
 6. そして時は動き出す(doall, dorun)
 7. 値段は何かの値段だ(マップ)
+8. 割り算の特殊事情
+9. Vectorとlist、似て非なるもの(vector)
 
 ### 4日目 (再帰の日)
 1. 再帰ック道場
@@ -99,6 +101,8 @@ Clojure日和
 ----------
 
 * [esehara shigeo](http://twitter.com/esehara)
+  * twitter: @esehara / email: esehara at gmail dot com
+
 
 ライセンス
 ---------
