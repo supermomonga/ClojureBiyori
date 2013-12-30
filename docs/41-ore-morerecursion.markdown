@@ -37,7 +37,7 @@
 
 　まず最初に、単純な再帰関数を定義してみよう。既に`loop-recur`という用法を知っているが、それはあえて使わないことにしよう。
 
-```clojur
+```clojure
 (defn pascal
   ([nth] (pascal nth 1))
   ([nth start]
@@ -75,7 +75,7 @@
 
 　さて、この関数を利用して、パスカルの三角形を生成してみよう。ただし、今回は、前回のリストを保存するようにしないといけない。
 
-```
+```clojure
 (defn pascal
     ([nth] (pascal nth 1 '()))
     ([nth start previous]
