@@ -352,6 +352,7 @@ loop [x 0] -> recur (+ x 1) -> loop 1 -> recur (+ x 1) -> loop x ...
             (= your-answer "3") (println "正直者には金の斧と銀の斧を与えましょう")
             (or (= your-answer "2") (= your-answer "1")) (println "傲慢なものには、斧を返しません")
             :else (do (println "あなた、ちゃんと答えてください！") (recur))))))
+(scene-1)
 ```
 
 　これで、プレイヤーがちゃんとした解答をするまで、延々と再帰し続けるようにすることが出来た。あとは`scene-2`、`scene-3`といったように、このアドベンチャーをどんどん拡張していけばよい。
