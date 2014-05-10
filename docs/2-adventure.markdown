@@ -16,7 +16,7 @@
 ```clojure
 (println "貴方の名前はなんですか？")
 (def your-name (read-line))
-(println "こんにちは！" player-name)
+(println "こんにちは！" your-name)
 ```
 　これで入力した文字列を、your-nameにセットすることができる。本当は、もっと上手いやりかたがあるけれども、今回は必要最低限でやっていこう。
 
