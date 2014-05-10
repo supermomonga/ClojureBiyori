@@ -292,7 +292,7 @@ your-answerが"1"であるなら、"傲慢なものには、斧を返しませ�
 ```clojure
 (loop [x 0]
   (if (> x 100) (println "end")
-                (do (println x) (recur (+ x 1))))
+                (do (println x) (recur (+ x 1)))))
 ```
 
 　ここで一つポイントなのは、`loop`が取る引数というのは、必ず初期値とペアになっているということだ。だから、奇数にするとエラーが出る。
