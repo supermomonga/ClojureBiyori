@@ -313,7 +313,7 @@ ClassCastException java.lang.String cannot be cast to java.lang.Number  clojure.
 　あとからしっかり教えるけれども、上のエラーを解決してみよう。そのために`Integer/parseInt`というのをつかってみよう。
 
 ```clojure
-(+ 1 (Integer/parseInt 1)) ;; => 2
+(+ 1 (Integer/parseInt "1")) ;; => 2
 ```
 
 　これはつまり、「この文字列を数字にかえて」ということを伝えたのだ。なもんだから、数字になりそうもないやつはエラーを出すことになる
